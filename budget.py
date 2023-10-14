@@ -20,28 +20,67 @@ class Category:
         print("Withdrawing: ",amount)
 
         # check available funds first
-        balance =  self.get_balance()
+        balance =  self.get_balance() 
+        newbalance = balance - amount
         print("Balance: ", balance)
         if balance >= amount:
             self.ledger.append({"amount":-abs(amount), "description":description })
+            # self.balance = newbalance
             return True
         else:
             return False
         
     def transfer(self, amount, category):
+        # Check to see whether transactions are feasible
         withdrawal = self.withdraw(amount, description=f"Transfer to {category.name}")
         print(withdrawal)
-        deposit = self.deposit(amount, description=f"Transfer from {self.name}")
-        if withdrawal == True and deposit == True:
-            return False
-        else:
-            return True
+
+        deposit = category.deposit(amount, description=f"Transfer from {self.name}")
+        print(deposit)
+
+        return withdrawal
+        
 
     def check_funds(self, amount):
         if self.get_balance() >= amount:
             return True
         else:
             return False
+    
+
+    def __str__(self):
+        descriptionMaxLength = 23
+        lenghtOfString = len(self.name)
+        asterix = int((30 - lenghtOfString)/2)
+        line = f'*'*int(asterix) + self.name +'*'*int(asterix)
+        line += '\n'
+        total = 0
+        for x in self.ledger:
+            # get first descriptionMaxLength characters of the description
+            # check to see if the characters are more that descriptionMaxLength
+            description = x['description']
+            descriptionLength = len(description)
+            descriptionLengthDifference = descriptionMaxLength-descriptionLength
+            descriptionSpacing = ' '*descriptionLengthDifference
+
+            amount = x['amount']
+            total += amount
+            decimalAmount = "{:.2f}".format(amount)
+            amountLength = len(decimalAmount)
+            amountLengthDifference = 7-amountLength
+
+            if descriptionMaxLength >= descriptionLength:
+                line += description+descriptionSpacing
+            else:
+                line += description[:descriptionMaxLength]
+
+            line += str(amountLengthDifference*' ')+str(decimalAmount) + '\n'
+            print(line)
+
+        line+='Total: '+"{:.2f}".format(total)
+        print(line) 
+            
+        return str(line)
         
     
     
