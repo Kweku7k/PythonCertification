@@ -141,9 +141,14 @@ def create_spend_chart(categories):
             else:
                 barChart += '   '
         barChart +='\n'
+    lineBreak = ''
+    lineBreak += rightAlign(' ')+' -'
+    for p in percentages:
+        lineBreak += '---'
         # function to check if the category is in that range
-
-
-    print(barChart)
+    lineBreak += '\n'
+    length = len(lineBreak)
+    barChart += lineBreak
+    print(length)
     return barChart
     
